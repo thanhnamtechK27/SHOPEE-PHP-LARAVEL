@@ -35,7 +35,7 @@
 					<div class="blog-post-area">
 						<h2 class="title text-center">Update user</h2>
 						 <div class="signup-form"><!--sign up form-->
-							<form method="post" action="" enctype="multipart/form-data">
+							<form method="post" action="{{ route('update_account')}}" enctype="multipart/form-data">
 								@if(session('success'))
 									<div class="alert alert-success alert-dismissible">
 										<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>

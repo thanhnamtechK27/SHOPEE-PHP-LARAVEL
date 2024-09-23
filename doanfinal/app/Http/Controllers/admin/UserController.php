@@ -58,6 +58,13 @@ class UserController extends Controller
             return redirect()->back()->withErrors('Update profile error.');
         }
     }
+    public function logout_admin(Request $request)
+    {
+        Auth::logout(); 
+        $request->session()->invalidate();
+        return redirect('/login');
+    }
+
   
 
 }

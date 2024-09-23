@@ -1,4 +1,4 @@
-@if (!request()->is('cart*') && !request()->is('frontend/checkout*') && !request()->is('register_fe') && !request()->is('login_fe'))
+@if (!request()->is('cart*') && !request()->is('frontend/checkout*') && !request()->is('register_fe') && !request()->is('login_fe')&& !request()->is('search_advanced'))
 
 
 <section id="slider"><!--slider-->
@@ -11,7 +11,6 @@
 							<li data-target="#slider-carousel" data-slide-to="1"></li>
 							<li data-target="#slider-carousel" data-slide-to="2"></li>
 						</ol>
-						
 						<div class="carousel-inner">
 							<div class="item active">
 								<div class="col-sm-6">

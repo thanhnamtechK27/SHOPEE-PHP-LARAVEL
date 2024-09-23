@@ -59,9 +59,8 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="error-404.html" aria-expanded="false">
-                                <i class="mdi mdi-alert-outline"></i>
-                                <span class="hide-menu">404</span>
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="{{ route('logout_admin') }}" aria-expanded="false">
+                                <span class="hide-menu"> (-) Logout </span>
                             </a>
                         </li>
                     </ul>

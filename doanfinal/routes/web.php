@@ -29,7 +29,9 @@ Auth::routes();
 // Home:
 // Admin middleware group
 // Route::group(['middleware' => 'admin'], function () {
-    // Dashboard
+    Route::get('/logout_admin', [App\Http\Controllers\admin\UserController::class, 'logout_admin'])->name('logout_admin');
+    
+// Dashboard
     Route::get('/dashboard', [DashboardController::class, 'checkdashboard'])->name('dashboard');
     
     // Profile
@@ -82,6 +84,8 @@ Auth::routes();
     Route::post('/blog_rate_ajax', [App\Http\Controllers\Frontend\RateBlogController::class, 'rateAjax'])->name('blog_rate_ajax');
     // Account:
     Route::get('/account_fe', [App\Http\Controllers\Frontend\AccountController::class, 'account_fe'])->name('account_fe');
+    Route::post('/update_account', [App\Http\Controllers\Frontend\MemberController::class, 'update_fe'])->name('update_account');
+    
     // Product:
     // Home product:
     Route::get('/my_product', [App\Http\Controllers\Frontend\ProductController::class, 'my_product'])->name('my_product');
@@ -128,6 +132,8 @@ Auth::routes();
         // Route để gửi email
         Route::get('/test', [App\Http\Controllers\MailController::class, 'index'])->name('index');
         Route::post('/order', [App\Http\Controllers\Frontend\CheckoutController::class, 'submitOrder'])->name('frontend.order');
+        
+
         // search:
         Route::get('/search/products', [App\Http\Controllers\Frontend\ProductController::class, 'search'])->name('search');
         Route::get('/search_advanced', [App\Http\Controllers\Frontend\ProductController::class, 'search_advanced'])->name('search_advanced');

@@ -168,6 +168,6 @@
                     <button style="background-color:red; padding:15px 60px 15px 60px;" type="submit" class="btn btn-success">Order</button>
                 </form>
             </div>
-        </div>
+    </div>
 </section>
 @endsection

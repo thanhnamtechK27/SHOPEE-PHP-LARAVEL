@@ -52,83 +52,88 @@ class CheckoutController extends Controller
         return view('Frontend.Checkout.checkout', compact('cartItems', 'totalCartPrice'));
     }
     public function submitOrder(Request $request)
-    {
-        \Log::info('Submit order called'); // Thêm log để kiểm tra
-        // Kiểm tra đăng nhập người dùng
-        if (!Auth::check()) {
-            return redirect()->route('login_fe'); // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
-        }
-    
-        try {
-            // Lấy thông tin người dùng hiện tại và giỏ hàng từ session
-            $user = Auth::user();
-            $cartItems = session()->get('cart', []);
-            $totalCartPrice = array_reduce($cartItems, function ($carry, $item) {
-                return $carry + $item['price'] * $item['qty'];
-            }, 0);
-    
-            // Chuẩn bị dữ liệu cho email thông báo
-            $data = [
-                'subject' => 'Xác nhận đơn hàng',
-                'body' => 'Đây là chi tiết về đơn hàng gần đây của bạn:',
-                'user' => $user,
-                'cartItems' => $cartItems,
-                'totalCartPrice' => '$' . number_format($totalCartPrice, 0),
-            ];
-    
-            // Tạo HTML cho bảng giỏ hàng
-            $cartHtml = '<table class="table table-condensed">
-                <thead>
-                    <tr class="cart_menu">
-                        <td class="image">Sản phẩm</td>
-                        <td class="image">Hình ảnh</td>
-                        <td class="description"></td>
-                        <td class="price">Giá</td>
-                        <td class="quantity">Số lượng</td>
-                        <td class="total">Tổng cộng</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>';
-            foreach ($cartItems as $item) {
-                $totalItemPrice = $item['price'] * $item['qty'];
-                $cartHtml .= '<tr>
-                                <td>' . $item['name'] . '</td>
-                                <td><img src="' . $item['hinhanh'] . '" alt="Ảnh sản phẩm"></td>
-                                <td></td>
-                                <td>$' . $item['price'] . '</td>
-                                <td>' . $item['qty'] . '</td>
-                                <td>$' . $totalItemPrice . '</td>
-                                <td></td>
-                            </tr>';
-            }
-            $cartHtml .= '<tr>
-                                <td colspan="4"></td>
-                                <td><strong>Tổng cộng:</strong></td>
-                                <td>$' . $totalCartPrice . '</td>
-                            </tr>
-                        </tbody>
-                    </table>';
-            // Thêm HTML của bảng giỏ hàng vào dữ liệu email
-            $data['cartHtml'] = $cartHtml;
-    
-            // Gửi email thông báo đơn hàng
-            Mail::to($user->email)->send(new MailNotify($data));
-    
-            // Xử lý lưu lịch sử đơn hàng
-            $this->processOrder($user);
-    
-            // Xóa giỏ hàng sau khi đặt hàng thành công
-            session()->forget('cart');
-    
-            // Trả về view "cart" với thông báo thành công
-            return view('cart')->with('message', 'Order placed successfully! Check your email for order details.');
-        } catch (\Exception $e) {
-            // Nếu có lỗi, ghi log để phân tích và hiển thị thông báo lỗi cho người dùng
-            \Log::error('Failed to place order: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to place order. Please try again later.');
-        }
+{
+    \Log::info('Submit order called'); // Thêm log để kiểm tra
+    // Kiểm tra đăng nhập người dùng
+    if (!Auth::check()) {
+        return redirect()->route('login_fe'); // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
     }
+
+    try {
+        // Lấy thông tin người dùng hiện tại và giỏ hàng từ session
+        $user = Auth::user();
+        $cartItems = session()->get('cart', []);
+        $totalCartPrice = array_reduce($cartItems, function ($carry, $item) {
+            return $carry + $item['price'] * $item['qty'];
+        }, 0);
+
+        // Chuẩn bị dữ liệu cho email thông báo
+        $data = [
+            'subject' => 'Xác nhận đơn hàng',
+            'body' => 'Đây là chi tiết về đơn hàng gần đây của bạn:',
+            'user' => $user,
+            'cartItems' => $cartItems,
+            'totalCartPrice' => '$' . number_format($totalCartPrice, 0),
+        ];
+
+        // Tạo HTML cho bảng giỏ hàng
+        $cartHtml = '<table class="table table-condensed">
+            <thead>
+                <tr class="cart_menu">
+                    <td class="image">Sản phẩm</td>
+                    <td class="image">Hình ảnh</td>
+                    <td class="description"></td>
+                    <td class="price">Giá</td>
+                    <td class="quantity">Số lượng</td>
+                    <td class="total">Tổng cộng</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>';
+        foreach ($cartItems as $item) {
+            $totalItemPrice = $item['price'] * $item['qty'];
+            $cartHtml .= '<tr>
+                            <td>' . $item['name'] . '</td>
+                            <td><img src="' . $item['hinhanh'] . '" alt="Ảnh sản phẩm"></td>
+                            <td></td>
+                            <td>$' . $item['price'] . '</td>
+                            <td>' . $item['qty'] . '</td>
+                            <td>$' . $totalItemPrice . '</td>
+                            <td></td>
+                        </tr>';
+        }
+        $cartHtml .= '<tr>
+                            <td colspan="4"></td>
+                            <td><strong>Tổng cộng:</strong></td>
+                            <td>$' . $totalCartPrice . '</td>
+                        </tr>
+                    </tbody>
+                </table>';
+        // Thêm HTML của bảng giỏ hàng vào dữ liệu email
+        $data['cartHtml'] = $cartHtml;
+
+        \Log::info('Sending email to: ' . $user->email);
+        // Gửi email thông báo đơn hàng
+        Mail::to($user->email)->send(new MailNotify($data));
+
+        // Xử lý lưu lịch sử đơn hàng
+        $this->processOrder($user);
+
+        // Xóa giỏ hàng sau khi đặt hàng thành công
+        session()->forget('cart');
+
+        // Lưu thông báo vào session
+        session()->flash('message', 'Checkout done!');
+
+        // Trả về view checkout
+        return redirect()->route('checkout'); // Thay 'checkout' bằng route tên thật của bạn
+    } catch (\Exception $e) {
+        // Nếu có lỗi, ghi log để phân tích và hiển thị thông báo lỗi cho người dùng
+        \Log::error('Failed to place order: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Failed to place order. Please try again later.');
+    }
+}
+
     
 
 

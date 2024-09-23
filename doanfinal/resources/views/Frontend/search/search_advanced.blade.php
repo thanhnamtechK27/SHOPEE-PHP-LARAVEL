@@ -1,7 +1,6 @@
 @extends("Frontend.layouts.app")
 @section("content")
 <div class="features_items">
-    <h2 class="title text-center">Sản phẩm nổi bật</h2>
 
     <!-- Form tìm kiếm -->
     <form action="{{ route('search_form_advanced') }}" method="post" style="margin-bottom: 50px;">
@@ -38,7 +37,7 @@
     <h2 class="title text-center">Kết quả tìm kiếm</h2>
     <div class="row">
         @foreach($products as $product)
-        <div class="col-sm-4">
+        <div style = "width:23%; height: auto;" class="col-sm-4">
             <div class="product-image-wrapper">
                 <div class="single-products">
                     <div class="productinfo text-center">

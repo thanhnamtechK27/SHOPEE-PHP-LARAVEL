@@ -100,7 +100,7 @@
 					<div class="col-sm-3">
 						<div class="search_box pull-right">
 							<form action="{{ route('search') }}" method="GET">
-								<input style="border-radius: 20px;" type="text" name="keyword" placeholder="Tìm kiếm"/>
+								<input style="border-radius: 20px; font-family: 'Arial', sans-serif; font-size: 12px;  color: red;"  type="text" name="keyword" placeholder="Tìm kiếm"/>
 								<button style="border-color: #00CC99;  border-radius: 20px; background-color:#00CC99; padding: 5px; color:#fff;" type="submit">Tìm kiếm</button>
 							</form>
 						</div>

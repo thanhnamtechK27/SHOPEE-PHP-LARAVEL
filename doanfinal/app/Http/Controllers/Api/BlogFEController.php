@@ -32,7 +32,7 @@ class BlogFEController extends Controller
      }
 
      
-     
+            
     public function blog_list()
     {
         $blogs = Blog::all();

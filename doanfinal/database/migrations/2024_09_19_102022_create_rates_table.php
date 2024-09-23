@@ -19,12 +19,16 @@ return new class extends Migration
             $table->unsignedBigInteger('id_blog');
             $table->unsignedBigInteger('id_user');
             $table->timestamp('time')->useCurrent();
-            
+            $table->float('rate')->nullable(); // Thêm cột rate ở đây
+
             // Xác định các ràng buộc ngoại khoá
-            $table->foreign('id_blog')->references('id')->on('blog');
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_blog')->references('id')->on('blog')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            
+            $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
@@ -33,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rate');
+        Schema::dropIfExists('rates');
     }
 };
